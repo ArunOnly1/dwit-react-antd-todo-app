@@ -7,6 +7,35 @@ export function TodoProvider({ children }) {
   const [todos, setTodos] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
 
+  // Form mode -> by default in ADD mode.
+  // Should store either "ADD" or "EDIT"
+  const [mode, setMode] = useState("ADD");
+
+  const [formValue, setFormValue] = useState({
+    title: "",
+    description: "",
+  });
+
+  const openAddDialog = () => {
+    setMode("ADD");
+    setFormValue({
+      title: "",
+      description: "",
+    });
+    setShowDialog(true);
+  };
+
+  const openEditDialog = (values) => {
+    // Set the form mode to edit
+    setMode("EDIT");
+
+    // Set values to the form with provided values in the argument
+    setFormValue(values);
+
+    // Finally, open the dialog
+    setShowDialog(true);
+  };
+
   const addTodo = (todo) => {
     // Add the new todo to the existing list...
     setTodos([todo, ...todos]);
@@ -20,6 +49,51 @@ export function TodoProvider({ children }) {
       duration: 2,
       placement: "topLeft",
     });
+  };
+
+  const editTodo = (editedTodo) => {
+    // Array.Map
+    const newTodos = todos.map((todo) => {
+      // If the todo's id matches with the one about to edited,
+      // replace that todo with the edited version
+      if (editedTodo.id === todo.id) {
+        return editedTodo;
+      } else {
+        return todo;
+      }
+    });
+
+    // const foundIndex = todos.findIndex((todo) => todo.id === editedTodo.id);
+    // todos[foundIndex] = editedTodo;
+
+    // Update the todo list with new todos
+    setTodos(newTodos);
+
+    // Show notification
+    notification.success({
+      message: "Todo edited!",
+      description: "Your todo has been edited successfully!",
+      duration: 2,
+      placement: "topLeft",
+    });
+
+    // Close the dialog
+    setShowDialog(false);
+  };
+
+  const markTodo = (id) => {
+    const updatedTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        return {
+          ...todo,
+          completed: true,
+        };
+      } else {
+        return todo;
+      }
+    });
+
+    setTodos(updatedTodos);
   };
 
   const deleteTodo = (id) => {
@@ -42,6 +116,12 @@ export function TodoProvider({ children }) {
         setShowDialog,
         addTodo,
         deleteTodo,
+        mode,
+        openEditDialog,
+        openAddDialog,
+        formValue,
+        editTodo,
+        markTodo,
       }}
     >
       {children}

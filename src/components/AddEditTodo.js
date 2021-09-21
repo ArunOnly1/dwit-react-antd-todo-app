@@ -5,9 +5,25 @@ import { TodoContext } from "../contexts/TodoContext";
 import { v4 as uuidv4 } from "uuid";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
 
-export default function AddTodo() {
+export default function AddEditTodo() {
+  // Form instance
   const [todoForm] = Form.useForm();
-  const { showDialog, setShowDialog, addTodo } = useContext(TodoContext);
+
+  // Pull context values
+  const {
+    showDialog,
+    setShowDialog,
+    addTodo,
+    editTodo,
+    mode,
+    formValue,
+    openAddDialog,
+  } = useContext(TodoContext);
+
+  // Fill the form with the values provided in "formValue"
+  todoForm.setFieldsValue(formValue);
+
+  // For Responsive design
   const breakpoints = useBreakpoint();
   return (
     <>
@@ -17,13 +33,13 @@ export default function AddTodo() {
           justifyContent: breakpoints.xs ? "center" : "flex-end",
         }}
       >
-        <Button onClick={() => setShowDialog(true)} type="default">
+        <Button onClick={openAddDialog} type="default">
           <PlusOutlined /> Add Todo
         </Button>
       </div>
       {/* Add Todo Dialog Box */}
       <Modal
-        title="New Todo"
+        title={`${mode === "ADD" ? "New" : "Edit"} Todo`}
         visible={showDialog}
         onCancel={() => setShowDialog(false)}
         footer={null}
@@ -32,19 +48,28 @@ export default function AddTodo() {
         }}
       >
         <Form
-          initialValues={{
-            title: "",
-            description: "",
-          }}
           form={todoForm}
           layout="vertical"
           onFinish={({ title, description }) => {
-            const todo = {
-              id: uuidv4(),
-              title,
-              description,
-            };
-            addTodo(todo);
+            // When form is submitted
+            if (mode === "ADD") {
+              // Add new todo
+              const todo = {
+                id: uuidv4(),
+                title,
+                description,
+                completed: false,
+              };
+              addTodo(todo);
+            } else {
+              // Edit existing todo
+              const todo = {
+                id: formValue.id,
+                title,
+                description,
+              };
+              editTodo(todo);
+            }
           }}
         >
           <Form.Item
@@ -84,11 +109,10 @@ export default function AddTodo() {
                 marginRight: 10,
               }}
             >
-              Submit
+              {mode === "ADD" ? "Add" : "Save"} Todo
             </Button>
             <Button
               type="default"
-              htmlType="submit"
               // On click, close the dialog box
               onClick={() => setShowDialog(false)}
             >
