@@ -33,7 +33,14 @@ export default function AddEditTodo() {
           justifyContent: breakpoints.xs ? "center" : "flex-end",
         }}
       >
-        <Button onClick={openAddDialog} type="default">
+        <Button
+          onClick={openAddDialog}
+          type="default"
+          style={{
+            backgroundColor: "teal",
+            color: "white",
+          }}
+        >
           <PlusOutlined /> Add Todo
         </Button>
       </div>
