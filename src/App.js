@@ -5,12 +5,10 @@ import { useContext } from "react";
 import AddEditTodo from "./components/AddEditTodo";
 import TodoCard from "./components/TodoCard";
 import { TodoContext } from "./contexts/TodoContext";
-import "./style.css";
 
 // Todo
 export default function App() {
   const { todos } = useContext(TodoContext);
-  console.log(todos);
   return (
     <>
       {/* Dialog that adds / edit todo */}

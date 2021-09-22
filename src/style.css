@@ -1,3 +1,10 @@
+/* Global styles */
+@import url("https://fonts.googleapis.com/css2?family=Berkshire+Swash&display=swap");
+
 body {
   padding: 10px;
+
+  /* cursive is a fallback font i.e. if Berkshire Swash is not avaiable 
+  for some reason, cursive font will be used */
+  font-family: "Berkshire Swash", cursive, sans-serif;
 }

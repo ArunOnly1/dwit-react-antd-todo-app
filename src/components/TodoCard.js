@@ -1,8 +1,10 @@
 import { CheckOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Card, Popconfirm } from "antd";
+import { Card, Popconfirm, Typography } from "antd";
 import Meta from "antd/lib/card/Meta";
 import { React, useContext } from "react";
 import { TodoContext } from "../contexts/TodoContext";
+
+const { Paragraph } = Typography;
 
 export default function TodoCard({ id, title, description, completed }) {
   const { deleteTodo, openEditDialog, markTodo } = useContext(TodoContext);
@@ -30,7 +32,19 @@ export default function TodoCard({ id, title, description, completed }) {
             ]
       }
     >
-      <Meta title={title} description={description} />
+      <Meta
+        title={title}
+        description={
+          <Paragraph
+            ellipsis={{
+              rows: 2,
+              expandable: true,
+            }}
+          >
+            {description}
+          </Paragraph>
+        }
+      />
     </Card>
   );
 }

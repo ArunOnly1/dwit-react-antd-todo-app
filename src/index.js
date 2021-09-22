@@ -1,8 +1,9 @@
 import { StrictMode } from "react";
 import ReactDOM from "react-dom";
-
 import App from "./App";
 import { TodoProvider } from "./contexts/TodoContext";
+
+import "./style.css";
 
 const rootElement = document.getElementById("root");
 ReactDOM.render(

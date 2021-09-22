@@ -1,5 +1,5 @@
 import { notification } from "antd";
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 export const TodoContext = createContext();
 
@@ -107,6 +107,22 @@ export function TodoProvider({ children }) {
       placement: "topLeft",
     });
   };
+
+  // useEffect
+  // useEffect(function, array of dependencies)
+
+  // When page loads, sync up / retrieve the todos from localStorage
+  // to the app state i.e. "todos"
+  useEffect(() => {
+    console.log("Syncing todos from localStorage");
+    setTodos(JSON.parse(localStorage.getItem("todos")));
+  }, []);
+
+  // When todos array gets updated, save to localstorage.
+  useEffect(() => {
+    console.log("Todo list has been updated! Saving to localStorage....");
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
 
   return (
     <TodoContext.Provider
