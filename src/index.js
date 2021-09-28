@@ -1,16 +1,16 @@
 import { StrictMode } from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import App from "./App";
-import { TodoProvider } from "./contexts/TodoContext";
-
+import { store } from "./redux/store";
 import "./style.css";
 
 const rootElement = document.getElementById("root");
 ReactDOM.render(
   <StrictMode>
-    <TodoProvider>
+    <Provider store={store}>
       <App />
-    </TodoProvider>
+    </Provider>
   </StrictMode>,
   rootElement
 );

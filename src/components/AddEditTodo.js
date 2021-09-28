@@ -1,24 +1,24 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal, notification } from "antd";
-import React, { useContext } from "react";
-import { TodoContext } from "../contexts/TodoContext";
-import { v4 as uuidv4 } from "uuid";
+import { Button, Form, Input, Modal } from "antd";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
+import {
+  addTodo,
+  closeDialog,
+  editTodo,
+  openAddDialog,
+} from "../redux/slices/todoSlice";
 
 export default function AddEditTodo() {
+  // Pull values from redux store
+  const { mode, formValue, showDialog } = useSelector((store) => store.todo);
+
+  const dispatch = useDispatch();
+
   // Form instance
   const [todoForm] = Form.useForm();
-
-  // Pull context values
-  const {
-    showDialog,
-    setShowDialog,
-    addTodo,
-    editTodo,
-    mode,
-    formValue,
-    openAddDialog,
-  } = useContext(TodoContext);
 
   // Fill the form with the values provided in "formValue"
   todoForm.setFieldsValue(formValue);
@@ -34,7 +34,7 @@ export default function AddEditTodo() {
         }}
       >
         <Button
-          onClick={openAddDialog}
+          onClick={() => dispatch(openAddDialog())}
           type="default"
           style={{
             backgroundColor: "teal",
@@ -48,7 +48,7 @@ export default function AddEditTodo() {
       <Modal
         title={`${mode === "ADD" ? "New" : "Edit"} Todo`}
         visible={showDialog}
-        onCancel={() => setShowDialog(false)}
+        onCancel={() => dispatch(closeDialog())}
         footer={null}
         afterClose={() => {
           todoForm.resetFields();
@@ -67,7 +67,7 @@ export default function AddEditTodo() {
                 description,
                 completed: false,
               };
-              addTodo(todo);
+              dispatch(addTodo(todo));
             } else {
               // Edit existing todo
               const todo = {
@@ -75,7 +75,7 @@ export default function AddEditTodo() {
                 title,
                 description,
               };
-              editTodo(todo);
+              dispatch(editTodo(todo));
             }
           }}
         >
@@ -121,7 +121,7 @@ export default function AddEditTodo() {
             <Button
               type="default"
               // On click, close the dialog box
-              onClick={() => setShowDialog(false)}
+              onClick={() => dispatch(closeDialog())}
             >
               Cancel
             </Button>

@@ -1,14 +1,34 @@
 import { Col, Row } from "antd";
 import "antd/dist/antd.css";
 import Title from "antd/lib/typography/Title";
-import { useContext } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import AddEditTodo from "./components/AddEditTodo";
 import TodoCard from "./components/TodoCard";
-import { TodoContext } from "./contexts/TodoContext";
+import { setTodos } from "./redux/slices/todoSlice";
 
-// Todo
+// 1st create a user interface
+// 2nd create logic for each feature - step by step
+
 export default function App() {
-  const { todos } = useContext(TodoContext);
+  const { todos } = useSelector((store) => store.todo);
+
+  const dispatch = useDispatch();
+
+  // When page loads, sync up / retrieve the todos from localStorage
+  // to the redux state i.e. "todos"
+  useEffect(() => {
+    console.log("Syncing todos from localStorage");
+    const todos = JSON.parse(localStorage.getItem("todos"));
+    dispatch(setTodos(todos));
+  }, []);
+
+  // When todos array from redux gets updated, save to localstorage.
+  useEffect(() => {
+    console.log("Todo list has been updated! Saving to localStorage....");
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
   return (
     <>
       {/* Dialog that adds / edit todo */}

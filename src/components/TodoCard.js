@@ -1,13 +1,16 @@
 import { CheckOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Card, Popconfirm, Typography } from "antd";
-import Meta from "antd/lib/card/Meta";
-import { React, useContext } from "react";
-import { TodoContext } from "../contexts/TodoContext";
-
+import { React } from "react";
+import { useDispatch } from "react-redux";
+import {
+  deleteTodo,
+  openEditDialog,
+  markTodo,
+} from "../redux/slices/todoSlice";
 const { Paragraph } = Typography;
 
 export default function TodoCard({ id, title, description, completed }) {
-  const { deleteTodo, openEditDialog, markTodo } = useContext(TodoContext);
+  const dispatch = useDispatch();
   return (
     <Card
       actions={
@@ -16,23 +19,28 @@ export default function TodoCard({ id, title, description, completed }) {
           : [
               <EditOutlined
                 key="edit"
-                onClick={() => openEditDialog({ id, title, description })}
+                onClick={() =>
+                  dispatch(openEditDialog({ id, title, description }))
+                }
               />,
               <Popconfirm
                 title="Are you sure to delete this task?"
                 okText="Yes"
                 cancelText="No"
                 onConfirm={() => {
-                  deleteTodo(id);
+                  dispatch(deleteTodo(id));
                 }}
               >
                 <DeleteOutlined />
               </Popconfirm>,
-              <CheckOutlined key="check" onClick={() => markTodo(id)} />,
+              <CheckOutlined
+                key="check"
+                onClick={() => dispatch(markTodo(id))}
+              />,
             ]
       }
     >
-      <Meta
+      <Card.Meta
         title={title}
         description={
           <Paragraph
